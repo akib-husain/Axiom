@@ -18,19 +18,17 @@ jobs:
         run: |
           curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
-      - name: Configure Databricks (DEV)
+      - name: Set Databricks credentials (DEV)
         if: github.ref == 'refs/heads/dev'
         run: |
-          databricks auth login \
-            --host ${{ secrets.DATABRICKS_DEV_HOST }} \
-            --token ${{ secrets.DATABRICKS_DEV_TOKEN }}
+          echo "DATABRICKS_HOST=${{ secrets.DATABRICKS_DEV_HOST }}" >> $GITHUB_ENV
+          echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_DEV_TOKEN }}" >> $GITHUB_ENV
 
-      - name: Configure Databricks (PROD)
+      - name: Set Databricks credentials (PROD)
         if: github.ref == 'refs/heads/prod'
         run: |
-          databricks auth login \
-            --host ${{ secrets.DATABRICKS_PROD_HOST }} \
-            --token ${{ secrets.DATABRICKS_PROD_TOKEN }}
+          echo "DATABRICKS_HOST=${{ secrets.DATABRICKS_PROD_HOST }}" >> $GITHUB_ENV
+          echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_PROD_TOKEN }}" >> $GITHUB_ENV
 
       - name: Verify Databricks connection
         run: |
