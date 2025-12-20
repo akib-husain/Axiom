@@ -36,7 +36,7 @@ jobs:
           
       - name: Deploy notebooks to Databricks
         run: |
-          databricks workspace import_dir \
+          databricks workspace import-dir \
             notebooks \
             /Workspace/Repos/Axiom_Git/Axiom \
             --overwrite
