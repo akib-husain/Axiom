@@ -7,9 +7,31 @@ on:
       - prod
 
 jobs:
-  deploy:
+  connect-databricks:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Install Databricks CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+
+      - name: Configure Databricks (DEV)
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          databricks auth login \
+            --host ${{ secrets.DATABRICKS_DEV_HOST }} \
+            --token ${{ secrets.DATABRICKS_DEV_TOKEN }}
+
+      - name: Configure Databricks (PROD)
+        if: github.ref == 'refs/heads/prod'
+        run: |
+          databricks auth login \
+            --host ${{ secrets.DATABRICKS_PROD_HOST }} \
+            --token ${{ secrets.DATABRICKS_PROD_TOKEN }}
+
+      - name: Verify Databricks connection
+        run: |
+          databricks workspace list /
